@@ -1,5 +1,5 @@
 #include <iostream>
-#include <pigpio.h>
+#include <pigpiod.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 
