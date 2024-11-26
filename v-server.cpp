@@ -4,7 +4,7 @@
 int main(int argc, char *argv[]) {
     gst_init(&argc, &argv);
 
-    std::string pipeline = "v4l2src device=/dev/video0 ! videoconvert ! x264enc ! rtph264pay config-interval=1 pt=96 ! udpsink host="192.168.1.100" port=5000";
+   std::string pipeline = "v4l2src device=/dev/video0 ! videoconvert ! x264enc ! rtph264pay config-interval=1 pt=96 ! udpsink host=192.168.1.100 port=5000";
 
     GstElement *pipe = gst_parse_launch(pipeline.c_str(), NULL);
     if (!pipe) {
@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
     }
 
     while (true) {
-        GstMessage *msg = gst_bus_timed_pop_filtered(bus, GST_CLOCK_TIME_NONE, GST_MESSAGE_ERROR | GST_MESSAGE_EOS);
+        GstMessage *msg = gst_bus_timed_pop_filtered(bus, GST_CLOCK_TIME_NONE, static_cast<GstMessageType>(GST_MESSAGE_ERROR | GST_MESSAGE_EOS));
 
         if (msg) {
             GError *err;
