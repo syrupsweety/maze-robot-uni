@@ -4,7 +4,8 @@
 int main(int argc, char *argv[]) {
     gst_init(&argc, &argv);
 
-    std::string pipeline = "udpsrc port=5000 ! application/x-rtp, payload=96 ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink";
+    // Define the pipeline to receive RTP packets, decode them, and play the video
+    std::string pipeline = "udpsrc port=5000 caps=\"application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264\" ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink";
 
     GstElement *pipe = gst_parse_launch(pipeline.c_str(), NULL);
     if (!pipe) {
@@ -21,8 +22,8 @@ int main(int argc, char *argv[]) {
     }
 
     while (true) {
-        GstMessage *msg = gst_bus_timed_pop_filtered(bus, GST_CLOCK_TIME_NONE, static_cast<GstMessageType>(GST_MESSAGE_ERROR | GST_MESSAGE_EOS));
-
+        GstMessage *msg = gst_bus_timed_pop_filtered(bus, GST_SECOND * 1, static_cast<GstMessageType>(GST_MESSAGE_ERROR | GST_MESSAGE_EOS));
+        std::cerr << "WHY" << std::endl;
         if (msg) {
             GError *err;
             gchar *debug_info;
